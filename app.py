@@ -11,14 +11,18 @@ def index():
         'Hello', 'World', 'Foo', 'Bar', 'A', 'A', 'A', 'A', 'Pimple', 'Blood',
         'Mars', 'Code', 'Die Hard', 'Gremlins', 'Love Actually', 'Elf'
     ]
-    #words = ['Mars', 'Code', 'Pimple', 'Blood']
+
     categories = [
         'Words Used in Programming', 'Letters Starting with A',
         'Non-Christmas Red Things', 'Christmas Movies'
     ]
 
-    # random.shuffle(words)
-    return render_template('index.html', words=words)
+    mistakes_remaining = 4
+
+    random.shuffle(words)
+    return render_template('index.html',
+                           words=words,
+                           mistakes_remaining=mistakes_remaining)
 
 
 if __name__ == '__main__':

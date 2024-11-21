@@ -5,24 +5,40 @@
     <div class="font-bold text-center">
       Create festive groups of four!
     </div>
-    <div>{{ words }}</div>
-    <div class="buttons">
+    <div class="tiles">
     {% for word in words %}
     {% if loop.index % 4 == 1 %}
     <div class="my-4 flex justify-between">
-      <div class="bg-stone-300 rounded-lg shadow-lg p-2 w-20 h-20">
-        {{ word }}
-      </div>
+    {% include 'word_tile.html' %}
     {% elif loop.index % 4 == 0 %}
-      <div class="bg-stone-300 rounded-lg shadow-lg p-2 w-20 h-20">
-        {{ word }}
-      </div>
+    {% include 'word_tile.html' %}  
     </div>
     {% else %}
-      <div class="bg-stone-300 rounded-lg shadow-lg p-2 w-20 h-20">
-        {{ word }}
-      </div>
+    {% include 'word_tile.html' %}
     {% endif %}
     {% endfor %}
+  </div>
+  <div class="flex mt-2 justify-center">
+    <div class="font-light text-sm mr-4">Mistletoe thorns remaining:</div>
+    <div class="mistakes">
+      {% for i in range(mistakes_remaining) %}
+      <div class="w-3 h-3 bg-red-600 rounded-full inline-block">
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="flex justify-center mt-2">
+    <button class="mx-1 border border-black rounded-full shadow-lg p-2 
+      w-20 h-10">
+      Shuffle
+    </button>
+    <button class="mx-1 border border-black rounded-full shadow-lg p-2 
+      w-28 h-10">
+      Deselect All
+    </button>
+    <button class="mx-1 border border-black rounded-full shadow-lg p-2
+      w-20 h-10 disabled:text-gray-400 disabled:border-gray-400" disabled>
+      Submit
+    </button>
   </div>
 {% endblock %}
