@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"
+      charset="utf-8">
+    <title>Welcome to Holiday Connecshuns!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+    <script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sans': ['Roboto','ui-sans-serif','system-ui',
+                                 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+  </head>
+  <body class="font-sans bg-gradient-to-br from-red-600 to-green-600 h-screen">
+    {% block content %}
+    {% endblock %}
+  </body>
+</html>

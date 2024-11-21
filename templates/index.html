@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+  <div class="mt-2 mx-auto bg-white rounded-lg shadow-lg px-2 py-4 w-11/12
+    md:w-1/4">
+    <div class="font-bold text-center">
+      Create festive groups of four!
+    </div>
+    <div>{{ words }}</div>
+    <div class="buttons">
+    {% for word in words %}
+    {% if loop.index % 4 == 1 %}
+    <div class="my-4 flex justify-between">
+      <div class="bg-stone-300 rounded-lg shadow-lg p-2 w-20 h-20">
+        {{ word }}
+      </div>
+    {% elif loop.index % 4 == 0 %}
+      <div class="bg-stone-300 rounded-lg shadow-lg p-2 w-20 h-20">
+        {{ word }}
+      </div>
+    </div>
+    {% else %}
+      <div class="bg-stone-300 rounded-lg shadow-lg p-2 w-20 h-20">
+        {{ word }}
+      </div>
+    {% endif %}
+    {% endfor %}
+  </div>
+{% endblock %}
