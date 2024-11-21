@@ -37,7 +37,19 @@
       Deselect All
     </button>
     <button class="mx-1 border border-black rounded-full shadow-lg p-2
-      w-20 h-10 disabled:text-gray-400 disabled:border-gray-400" disabled>
+      w-20 h-10 disabled:text-gray-400 disabled:border-gray-400"
+      _="on click log 'Submitted'
+      on click from .tile 
+        if $selected === 4 
+          remove [@disabled] 
+          add .bg-black 
+          add .text-white
+        else 
+          add [@disabled]
+          remove .bg-black
+          remove .text-white
+        end"
+      disabled>
       Submit
     </button>
   </div>
