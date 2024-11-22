@@ -6,7 +6,7 @@
     <div class="font-bold text-center">
       Create festive groups of four!
     </div>
-    <div class="tiles">
+    <div id="tiles">
     {% for word in words %}
     {% if loop.index % 4 == 1 %}
     <div class="my-4 flex justify-between">
@@ -16,7 +16,7 @@
     </div>
     {% endif %}
     {% endfor %}
-  </div>
+    </div>
   <div class="flex mt-2 justify-center">
     <div class="font-light text-sm mr-4">Mistletoe thorns remaining:</div>
     <div class="mistakes">
@@ -35,9 +35,21 @@
       w-28 h-10">
       Deselect All
     </button>
-    <button class="mx-1 border border-black rounded-full shadow-lg p-2
+    <button hx-trigger="checktiles from:body" hx-target="#tiles" 
+      hx-post="/check-tiles"
+      class="mx-1 border border-black rounded-full shadow-lg p-2
       w-20 h-10 disabled:text-gray-400 disabled:border-gray-400"
-      _="on click log 'Submitted'
+      _="on click
+        add .transition-transform .duration-300 .ease-in-out .transform 
+          .-translate-y-2 to <button.bg-stone-600/>
+        then wait 500 ms
+        then remove 
+          .-translate-y-2 from <button.bg-stone-600/>
+        then wait 350 ms
+        then remove
+          .transition-transform .duration-300 .ease-in-out .transform 
+          from <button.bg-stone-600/>
+        then send checktiles
       on click from .tile 
         if $selected === 4 
           remove [@disabled] 

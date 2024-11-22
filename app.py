@@ -4,6 +4,8 @@ from flask import Flask, render_template
 
 app = Flask(__name__)
 
+words = []
+categories = []
 
 @app.route('/')
 def index():
@@ -24,6 +26,9 @@ def index():
                            words=words,
                            mistakes_remaining=mistakes_remaining)
 
+@app.route('/check-tiles', methods=['GET','POST'])
+def check_tiles():
+    return 'foo'
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
