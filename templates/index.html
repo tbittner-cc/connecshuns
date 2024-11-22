@@ -10,12 +10,10 @@
     {% for word in words %}
     {% if loop.index % 4 == 1 %}
     <div class="my-4 flex justify-between">
+    {% endif %}
     {% include 'word_tile.html' %}
-    {% elif loop.index % 4 == 0 %}
-    {% include 'word_tile.html' %}  
+    {% if loop.index % 4 == 0 %}
     </div>
-    {% else %}
-    {% include 'word_tile.html' %}
     {% endif %}
     {% endfor %}
   </div>
