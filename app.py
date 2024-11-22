@@ -1,11 +1,16 @@
 import random
 
-from flask import Flask, render_template
+from flask import Flask, redirect, render_template, session
 
 app = Flask(__name__)
 
 words = []
 categories = []
+
+@app.route('/reset')
+def reset():
+    session.clear()
+    return redirect('/')
 
 @app.route('/')
 def index():
