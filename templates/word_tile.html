@@ -1,4 +1,4 @@
-<button _="on click 
+<div _="on click 
   if $selected >= 4 and not :clicked
     add [@disabled]
   else
@@ -8,11 +8,15 @@
     set :clicked to not :clicked
     if :clicked 
       increment $selected
+      add @value='selected' to #{{ word[0] }}
     else
       decrement $selected
+      add @value='' to #{{ word[0] }}
     end
   end"
   class="tile bg-stone-300 text-black rounded-lg shadow-lg p-2 w-20 h-20 
   font-bold uppercase text-sm text-center flex items-center justify-center">
-  {{ word }}
-</button>
+  {{ word[1] }}
+  <input type = "hidden" name = "{{ word[0] }}" id="{{ word[0] }}" 
+    value=''/>
+</div>

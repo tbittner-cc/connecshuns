@@ -1,68 +1,51 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="flex items-center justify-center h-screen">
+<form class="flex items-center justify-center h-screen">
   <div class="mt-2 mx-auto bg-white rounded-lg shadow-lg px-2 py-4 w-11/12
     md:w-1/4">
     <div class="font-bold text-center">
       Create festive groups of four!
     </div>
-    <div id="tiles">
-    {% for word in words %}
-    {% if loop.index % 4 == 1 %}
-    <div class="my-4 flex justify-between">
-    {% endif %}
-    {% include 'word_tile.html' %}
-    {% if loop.index % 4 == 0 %}
-    </div>
-    {% endif %}
-    {% endfor %}
-    </div>
-  <div class="flex mt-2 justify-center">
-    <div class="font-light text-sm mr-4">Mistletoe thorns remaining:</div>
-    <div class="mistakes">
-      {% for i in range(mistakes_remaining) %}
-      <div class="w-3 h-3 bg-red-600 rounded-full inline-block">
-      </div>
-      {% endfor %}
+    {% include 'word_tile_board.html' %}
+    <div class="flex justify-center mt-2">
+      <button class="mx-1 border border-black rounded-full shadow-lg p-2 
+        w-20 h-10">
+        Shuffle
+      </button>
+      <button class="mx-1 border border-black rounded-full shadow-lg p-2 
+        w-28 h-10">
+        Deselect All
+      </button>
+      <button hx-post="/check-tiles" hx-target="#tiles" 
+        hx-trigger="checktiles from:body" 
+        class="mx-1 border border-black rounded-full shadow-lg p-2
+        w-20 h-10 disabled:text-gray-400 disabled:border-gray-400"
+        _="on click
+          halt the event
+          add .transition-transform .duration-300 .ease-in-out .transform 
+            .-translate-y-2 to <div.bg-stone-600/>
+          then wait 500 ms
+          then remove 
+            .-translate-y-2 from <div.bg-stone-600/>
+          then wait 350 ms
+          then remove
+            .transition-transform .duration-300 .ease-in-out .transform 
+            from <div.bg-stone-600/>
+          then send checktiles
+        on click from .tile 
+          if $selected === 4 
+            remove [@disabled] 
+            add .bg-black 
+            add .text-white
+          else 
+            add [@disabled]
+            remove .bg-black
+            remove .text-white
+          end"
+        disabled>
+        Submit
+      </button>
     </div>
   </div>
-  <div class="flex justify-center mt-2">
-    <button class="mx-1 border border-black rounded-full shadow-lg p-2 
-      w-20 h-10">
-      Shuffle
-    </button>
-    <button class="mx-1 border border-black rounded-full shadow-lg p-2 
-      w-28 h-10">
-      Deselect All
-    </button>
-    <button hx-trigger="checktiles from:body" hx-target="#tiles" 
-      hx-post="/check-tiles"
-      class="mx-1 border border-black rounded-full shadow-lg p-2
-      w-20 h-10 disabled:text-gray-400 disabled:border-gray-400"
-      _="on click
-        add .transition-transform .duration-300 .ease-in-out .transform 
-          .-translate-y-2 to <button.bg-stone-600/>
-        then wait 500 ms
-        then remove 
-          .-translate-y-2 from <button.bg-stone-600/>
-        then wait 350 ms
-        then remove
-          .transition-transform .duration-300 .ease-in-out .transform 
-          from <button.bg-stone-600/>
-        then send checktiles
-      on click from .tile 
-        if $selected === 4 
-          remove [@disabled] 
-          add .bg-black 
-          add .text-white
-        else 
-          add [@disabled]
-          remove .bg-black
-          remove .text-white
-        end"
-      disabled>
-      Submit
-    </button>
-  </div>
-  </div>
+</form>
 {% endblock %}

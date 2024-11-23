@@ -1,0 +1,22 @@
+<div id="tiles">
+  <div>
+    {% for word in words %}
+    {% if loop.index % 4 == 1 %}
+    <div class="my-4 flex justify-between">
+    {% endif %}
+    {% include 'word_tile.html' %}
+    {% if loop.index % 4 == 0 %}
+    </div>
+    {% endif %}
+    {% endfor %}
+  </div>
+  <div class="flex mt-2 justify-center">
+    <div class="font-light text-sm mr-4">Mistletoe thorns remaining:</div>
+    <div class="mistakes">
+      {% for i in range(mistakes_remaining) %}
+      <div class="w-3 h-3 bg-red-600 rounded-full inline-block">
+    </div>
+    {% endfor %}
+    </div>
+  </div>
+</div>
