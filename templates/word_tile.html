@@ -8,7 +8,7 @@
     set :clicked to not :clicked
     if :clicked 
       increment $selected
-      add @value='selected' to #{{ word[0] }}
+      add @value='{{ word[1] }}' to #{{ word[0] }}
     else
       decrement $selected
       add @value='' to #{{ word[0] }}
