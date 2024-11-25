@@ -1,22 +1,33 @@
-<div _="on click 
-  if $selected >= 4 and not :clicked
-    add [@disabled]
+<div _="on click
+  if I match .bg-stone-600
+    remove .bg-stone-600
+    add .bg-stone-300
+    remove .text-white
+    add .text-black
+    add @value='' to #{{ word[0] }}
   else
-    remove [@disabled] from .tile
-    toggle between .bg-stone-300 and .bg-stone-600 
-    toggle between .text-black and .text-white
-    set :clicked to not :clicked
-    if :clicked 
-      increment $selected
+    if (<div.bg-stone-600 />).length !== 4
+      remove .bg-stone-300
+      add .bg-stone-600
+      remove .text-black
+      add .text-white
       add @value='{{ word[1] }}' to #{{ word[0] }}
-    else
-      decrement $selected
-      add @value='' to #{{ word[0] }}
     end
   end"
-  class="tile bg-stone-300 text-black rounded-lg shadow-lg p-2 w-20 h-20 
-  font-bold uppercase text-sm text-center flex items-center justify-center">
+  class="tile rounded-lg shadow-lg p-2 w-20 h-20 
+  font-bold uppercase text-sm text-center flex items-center justify-center
+  {% if word[0] in current_guesses %}
+  bg-stone-600 text-white
+  {% else %}
+  bg-stone-300 text-black
+  {% endif %}
+  ">
   {{ word[1] }}
   <input type = "hidden" name = "{{ word[0] }}" id="{{ word[0] }}" 
-    value=''/>
+    value='
+    {% if word[0] in current_guesses %}
+    {{ word[1] }}
+    {% endif %}
+    '/>
+  
 </div>

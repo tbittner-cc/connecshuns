@@ -7,45 +7,6 @@
       Create festive groups of four!
     </div>
     {% include 'word_tile_board.html' %}
-    <div class="flex justify-center mt-2">
-      <button class="mx-1 border border-black rounded-full shadow-lg p-2 
-        w-20 h-10">
-        Shuffle
-      </button>
-      <button class="mx-1 border border-black rounded-full shadow-lg p-2 
-        w-28 h-10">
-        Deselect All
-      </button>
-      <button hx-post="/check-tiles" hx-target="#tiles" 
-        hx-trigger="checktiles from:body" 
-        class="mx-1 border border-black rounded-full shadow-lg p-2
-        w-20 h-10 disabled:text-gray-400 disabled:border-gray-400"
-        _="on click
-          halt the event
-          add .transition-transform .duration-300 .ease-in-out .transform 
-            .-translate-y-2 to <div.bg-stone-600/>
-          then wait 500 ms
-          then remove 
-            .-translate-y-2 from <div.bg-stone-600/>
-          then wait 350 ms
-          then remove
-            .transition-transform .duration-300 .ease-in-out .transform 
-            from <div.bg-stone-600/>
-          then send checktiles
-        on click from .tile 
-          if $selected === 4 
-            remove [@disabled] 
-            add .bg-black 
-            add .text-white
-          else 
-            add [@disabled]
-            remove .bg-black
-            remove .text-white
-          end"
-        disabled>
-        Submit
-      </button>
-    </div>
   </div>
 </form>
 {% endblock %}

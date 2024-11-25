@@ -19,4 +19,53 @@
     {% endfor %}
     </div>
   </div>
+  <div class="flex justify-center mt-2">
+    <button class="mx-1 border border-black rounded-full shadow-lg p-2 
+      w-20 h-10">
+      Shuffle
+    </button>
+    <button type="button"
+      _="on click
+          remove .bg-stone-600 from .tile
+          add .bg-stone-300 to .tile
+          remove .text-white from .tile
+          add .text-black to .tile
+          add @value='' to <input[type='hidden'] />
+          add [@disabled] to .submit
+          remove .bg-black from .submit
+          remove .text-white from .submit"
+      class="mx-1 border border-black rounded-full shadow-lg p-2 
+      w-28 h-10">
+      Deselect All
+    </button>
+    <button hx-post="/check-tiles" hx-target="#tiles" 
+      hx-trigger="checktiles from:body" 
+      class="submit mx-1 border border-black rounded-full shadow-lg p-2
+      w-20 h-10 disabled:text-gray-400 disabled:border-gray-400"
+      _="on click
+        halt the event
+        add .transition-transform .duration-300 .ease-in-out .transform 
+          .-translate-y-2 to <div.bg-stone-600/>
+        then wait 500 ms
+        then remove 
+          .-translate-y-2 from <div.bg-stone-600/>
+        then wait 350 ms
+        then remove
+          .transition-transform .duration-300 .ease-in-out .transform 
+          from <div.bg-stone-600/>
+        then send checktiles
+      on click from .tile 
+        if (<div.bg-stone-600 />).length === 4
+          remove [@disabled]
+          add .bg-black 
+          add .text-white
+        else 
+          add [@disabled]
+          remove .bg-black
+          remove .text-white
+        end"
+      disabled>
+      Submit
+    </button>
+  </div>
 </div>

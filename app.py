@@ -41,52 +41,49 @@ def reset():
 
 @app.route('/')
 def index():
-    if session.get('mistakes_remaining') is None:
+    if not session.get('mistakes_remaining'):
         session['mistakes_remaining'] = 4
-    if session.get('player_words') is None:
-        session['player_words'] = random.sample(db['words'], 
-                                                len(db['words']))
+    if not session.get('player_words'):
+        session['player_words'] = [tuple(word.value) for word in db['words']]
     return render_template('index.html',
                            words=session['player_words'],
-                           mistakes_remaining=session['mistakes_remaining'])
+                           mistakes_remaining=session['mistakes_remaining'],
+                           current_guesses=[])
 
 
 @app.route('/check-tiles', methods=['GET', 'POST'])
 def check_tiles():
     mistakes_remaining = session.get('mistakes_remaining')
-    
-    previous_guesses = session.get('previous_guesses')
-    if previous_guesses is None:
-        previous_guesses = []
-        
-    words = session.get('player_words')
-    
-    guessed_categories = session.get('guessed_categories')
-    if guessed_categories is None:
-        guessed_categories = []
-    
-    post_vals=[x[1] for x in list(request.form.items()) 
-                if x[1] != '']
-    previous_guesses.append(post_vals)
-    session['previous_guesses'] = previous_guesses
-    
-    word_lists = [x['words'] for x in db['categories']]
 
-    match = -1
-    for idx,word_list in enumerate(word_lists):
-        if all(item in word_list for item in post_vals):
-            match = idx
-            break
-    if match != -1:
-        category = db['categories'][match]    
-    print(post_vals)
+    # previous_guesses = session.get('previous_guesses')
+    # if previous_guesses is None:
+    #     previous_guesses = []
 
-    
-    if session['previous_guesses'] is None:
-        session['previous_guesses'] = [post_vals]
-        
+    # successfully_guessed_categories = session.get(
+    #     'successfully_guessed_categories')
+    # if not successfully_guessed_categories:
+    #     successfully_guessed_categories = []
 
-    return 'foo'
+    current_guesses = [x[0] for x in list(request.form.items()) if x[1].strip() != '']
+    # previous_guesses.append(current_guesses)
+    # session['previous_guesses'] = previous_guesses
+
+    # word_lists = [x['words'] for x in db['categories']]
+
+    # match = -1
+    # for idx, word_list in enumerate(word_lists):
+    #     if all(item in word_list for item in current_guesses):
+    #         match = idx
+    #         break
+    # if match != -1:
+    #     category = db['categories'][match]
+
+    print(current_guesses)
+
+    return render_template('word_tile_board.html',
+                           words=session['player_words'],
+                           mistakes_remaining=mistakes_remaining,
+                           current_guesses=current_guesses)
 
 
 if __name__ == '__main__':
