@@ -21,7 +21,7 @@ db['categories'] = [{
     'words': ['Hello', 'Foo', 'World', 'Bar']
 }, {
     'level': 4,
-    'category': 'Non-Christmans Red Things',
+    'category': 'Non-Christmas Red Things',
     'words': ['Pimple', 'Blood', 'Mars', 'Code']
 }]
 
@@ -54,36 +54,64 @@ def index():
 @app.route('/check-tiles', methods=['GET', 'POST'])
 def check_tiles():
     mistakes_remaining = session.get('mistakes_remaining')
-
-    # previous_guesses = session.get('previous_guesses')
-    # if previous_guesses is None:
-    #     previous_guesses = []
+    previous_guesses = session.get('previous_guesses')
+    if previous_guesses is None:
+        previous_guesses = []
 
     # successfully_guessed_categories = session.get(
     #     'successfully_guessed_categories')
     # if not successfully_guessed_categories:
     #     successfully_guessed_categories = []
 
-    current_guesses = [x[0] for x in list(request.form.items()) if x[1].strip() != '']
-    # previous_guesses.append(current_guesses)
-    # session['previous_guesses'] = previous_guesses
+    current_guesses = [
+        x[0] for x in list(request.form.items()) if x[1].strip() != ''
+    ]
 
-    # word_lists = [x['words'] for x in db['categories']]
+    for previous_guess in previous_guesses:
+        if all(item in current_guesses for item in previous_guess):
+            message = "Already guessed."
+            return render_template('word_tile_board.html',
+                                   words=session["player_words"],
+                                   mistakes_remaining=mistakes_remaining,
+                                   current_guesses=current_guesses,
+                                   message=message)
+    previous_guesses.append(current_guesses)
+    session['previous_guesses'] = previous_guesses
 
-    # match = -1
-    # for idx, word_list in enumerate(word_lists):
-    #     if all(item in word_list for item in current_guesses):
-    #         match = idx
-    #         break
-    # if match != -1:
-    #     category = db['categories'][match]
+    current_words = [x[1] for x in db['words'] if x[0] in current_guesses]
+    word_lists = [x['words'] for x in db['categories']]
+    match = -1
+    category = None
+    count = 0
+    message = None
+    for idx, word_list in enumerate(word_lists):
+        cur_count = sum(1 for item in word_list if item in current_words)
+        if cur_count > count:
+            count = cur_count
+        if all(item in word_list for item in current_words):
+            match = idx
+            break
+    if match != -1:
+        category = db['categories'][match]['category']
+    else:
+        mistakes_remaining -= 1
+        session['mistakes_remaining'] = mistakes_remaining
+        if mistakes_remaining == 0:
+            message = 'No milk and cookies for you!'
+        else:
+            message = "One away..." if count == 3 else "Bah! Humbug!"
+
 
     print(current_guesses)
+    print(match)
+    print(category)
 
     return render_template('word_tile_board.html',
                            words=session['player_words'],
                            mistakes_remaining=mistakes_remaining,
-                           current_guesses=current_guesses)
+                           current_guesses=current_guesses,
+                           match=match,
+                           message=message)
 
 
 if __name__ == '__main__':

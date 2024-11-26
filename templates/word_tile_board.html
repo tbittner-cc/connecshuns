@@ -1,4 +1,23 @@
-<div id="tiles">
+<div id="tiles" class='relative'
+  _="on load
+      {% if match == -1 %}
+      add .vibrate to .bg-stone-600
+      wait 350 ms
+      remove .vibrate from .bg-stone-600
+      {% endif %}
+      send showmessage
+    on showmessage
+      wait 400 ms
+      remove .hidden from #message
+      wait 2 s
+      add .opacity-0 to #message
+      add .hidden to #message"
+  >
+  <div id="message" class='absolute top-3 left-1/2 hidden transform 
+    -translate-x-1/2 text-white text-sm bg-black border rounded-lg p-2 
+    z-10 whitespace-nowrap'>
+    {{ message }}
+  </div>
   <div>
     {% for word in words %}
     {% if loop.index % 4 == 1 %}
@@ -24,6 +43,7 @@
       w-20 h-10">
       Shuffle
     </button>
+
     <button type="button"
       _="on click
           remove .bg-stone-600 from .tile
@@ -38,6 +58,7 @@
       w-28 h-10">
       Deselect All
     </button>
+  
     <button hx-post="/check-tiles" hx-target="#tiles" 
       hx-trigger="checktiles from:body" 
       class="submit mx-1 border border-black rounded-full shadow-lg p-2
@@ -67,5 +88,7 @@
       disabled>
       Submit
     </button>
+
+    
   </div>
 </div>
