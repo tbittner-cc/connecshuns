@@ -14,7 +14,13 @@
       add .opacity-0 to #message
       add .hidden to #message"
   {% endif %}
-  {% if match and match > -1 %}
+  {% if flash == True %}
+  _="on load
+      add .transform .transition-transform .duration-300 .scale-100 to the last <div.category />
+      add .scale-110 to the last <div.category />
+      wait 300ms
+      remove .scale-110 from the last <div.category />
+  "
   {% endif %}
   >
   {% if message %}
@@ -26,7 +32,7 @@
   {% endif %}
   <div id='categories'>
     {% for category in guessed_categories %}
-    <div class='my-4 h-20 rounded-lg flex flex-col items-center justify-center
+    <div class='category my-4 h-20 rounded-lg flex flex-col items-center justify-center
       {% if category['level'] == 1 %}
       bg-yellow-300
       {% elif category['level'] == 2 %}
@@ -35,9 +41,6 @@
       bg-blue-300
       {% else %}
       bg-purple-500
-      {% endif %}
-      {% if flash == True and loop.last == True %}
-      text-white
       {% endif %}
       '>
       <div class="font-bold uppercase text-sm">{{ category['category'] }}</div>
