@@ -41,9 +41,12 @@ def index():
         player_words = [tuple(word.value) for word in db['words']]
         random.shuffle(player_words)
         session['player_words'] = player_words
+    if not session.get('guessed_categories'):
+        session['guessed_categories'] = []
     return render_template('index.html',
                            words=session['player_words'],
                            mistakes_remaining=session['mistakes_remaining'],
+                           guessed_categories=session['guessed_categories'],
                            current_guesses=[])
 
 
@@ -71,11 +74,9 @@ def check_tiles():
     previous_guesses = session.get('previous_guesses')
     if previous_guesses is None:
         previous_guesses = []
-
-    # successfully_guessed_categories = session.get(
-    #     'successfully_guessed_categories')
-    # if not successfully_guessed_categories:
-    #     successfully_guessed_categories = []
+    guessed_categories = session.get('guessed_categories')
+    if guessed_categories is None:
+        guessed_categories = []
 
     current_guesses = [
         x[0] for x in list(request.form.items()) if x[1].strip() != ''
@@ -106,7 +107,14 @@ def check_tiles():
             match = idx
             break
     if match != -1:
-        category = db['categories'][match]['category']
+        category = {}
+        for key, value in db['categories'][match].items():
+            if key != 'words':
+                category[key] = value
+            else:
+                category[key] = ", ".join([x for x in db['categories'][match]['words']])
+        guessed_categories.append(category)
+        session['guessed_categories'] = guessed_categories
     else:
         mistakes_remaining -= 1
         session['mistakes_remaining'] = mistakes_remaining
@@ -115,8 +123,6 @@ def check_tiles():
         else:
             message = "One away..." if count == 3 else "Bah! Humbug!"
 
-    print(current_guesses)
-    print(match)
     print(category)
 
     return render_template('word_tile_board.html',
@@ -124,6 +130,7 @@ def check_tiles():
                            mistakes_remaining=mistakes_remaining,
                            current_guesses=current_guesses,
                            match=match,
+                           guessed_categories=guessed_categories,
                            message=message)
 
 

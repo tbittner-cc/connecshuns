@@ -14,6 +14,8 @@
       add .opacity-0 to #message
       add .hidden to #message"
   {% endif %}
+  {% if match and match > -1 %}
+  {% endif %}
   >
   {% if message %}
   <div id="message" class='absolute top-3 left-1/2 hidden transform 
@@ -22,7 +24,25 @@
     {{ message }}
   </div>
   {% endif %}
-  <div>
+  <div id='categories'>
+    {% for category in guessed_categories %}
+    <div class='my-4 h-20 rounded-lg flex flex-col items-center justify-center
+      {% if category['level'] == 1 %}
+      bg-yellow-300
+      {% elif category['level'] == 2 %}
+      bg-green-600
+      {% elif category['level'] == 3 %}
+      bg-blue-300
+      {% else %}
+      bg-purple-500
+      {% endif %}
+      '>
+      <div class="font-bold uppercase text-sm">{{ category['category'] }}</div>
+      <div class="uppercase text-sm">{{ category['words']}}</div>
+    </div>
+    {% endfor %}
+  </div>
+  <div id='word-tiles'>
     {% for word in words %}
     {% if loop.index % 4 == 1 %}
     <div class="my-4 flex justify-between">
