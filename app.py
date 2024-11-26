@@ -33,19 +33,33 @@ db['words'] = [('word' + str(idx), word)
                for idx, word in enumerate(source_words)]
 
 
+@app.route('/')
+def index():
+    if not session.get('mistakes_remaining'):
+        session['mistakes_remaining'] = 4
+    if not session.get('player_words'):
+        player_words = [tuple(word.value) for word in db['words']]
+        random.shuffle(player_words)
+        session['player_words'] = player_words
+    return render_template('index.html',
+                           words=session['player_words'],
+                           mistakes_remaining=session['mistakes_remaining'],
+                           current_guesses=[])
+
+
 @app.route('/reset')
 def reset():
     session.clear()
     return redirect('/')
 
 
-@app.route('/')
-def index():
-    if not session.get('mistakes_remaining'):
-        session['mistakes_remaining'] = 4
-    if not session.get('player_words'):
-        session['player_words'] = [tuple(word.value) for word in db['words']]
-    return render_template('index.html',
+@app.route('/shuffle', methods=['POST'])
+def shuffle():
+    player_words = session['player_words']
+    random.shuffle(player_words)
+    session['player_words'] = player_words
+
+    return render_template('word_tile_board.html',
                            words=session['player_words'],
                            mistakes_remaining=session['mistakes_remaining'],
                            current_guesses=[])
@@ -100,7 +114,6 @@ def check_tiles():
             message = 'No milk and cookies for you!'
         else:
             message = "One away..." if count == 3 else "Bah! Humbug!"
-
 
     print(current_guesses)
     print(match)

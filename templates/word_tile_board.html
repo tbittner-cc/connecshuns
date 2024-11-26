@@ -1,4 +1,5 @@
 <div id="tiles" class='relative'
+  {% if message %}
   _="on load
       {% if match == -1 %}
       add .vibrate to .bg-stone-600
@@ -12,12 +13,15 @@
       wait 2 s
       add .opacity-0 to #message
       add .hidden to #message"
+  {% endif %}
   >
+  {% if message %}
   <div id="message" class='absolute top-3 left-1/2 hidden transform 
     -translate-x-1/2 text-white text-sm bg-black border rounded-lg p-2 
     z-10 whitespace-nowrap'>
     {{ message }}
   </div>
+  {% endif %}
   <div>
     {% for word in words %}
     {% if loop.index % 4 == 1 %}
@@ -39,7 +43,8 @@
     </div>
   </div>
   <div class="flex justify-center mt-2">
-    <button class="mx-1 border border-black rounded-full shadow-lg p-2 
+    <button hx-post="/shuffle" hx-target="#tiles" 
+      class="mx-1 border border-black rounded-full shadow-lg p-2 
       w-20 h-10">
       Shuffle
     </button>
@@ -89,6 +94,5 @@
       Submit
     </button>
 
-    
   </div>
 </div>
