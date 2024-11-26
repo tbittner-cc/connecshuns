@@ -36,6 +36,9 @@
       {% else %}
       bg-purple-500
       {% endif %}
+      {% if flash == True and loop.last == True %}
+      text-white
+      {% endif %}
       '>
       <div class="font-bold uppercase text-sm">{{ category['category'] }}</div>
       <div class="uppercase text-sm">{{ category['words']}}</div>

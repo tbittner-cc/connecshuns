@@ -65,6 +65,7 @@ def shuffle():
     return render_template('word_tile_board.html',
                            words=session['player_words'],
                            mistakes_remaining=session['mistakes_remaining'],
+                           guessed_categories=session['guessed_categories'],
                            current_guesses=[])
 
 
@@ -75,6 +76,7 @@ def check_tiles():
     if previous_guesses is None:
         previous_guesses = []
     guessed_categories = session.get('guessed_categories')
+    print("Guessed categories",guessed_categories)
     if guessed_categories is None:
         guessed_categories = []
 
@@ -89,6 +91,7 @@ def check_tiles():
                                    words=session["player_words"],
                                    mistakes_remaining=mistakes_remaining,
                                    current_guesses=current_guesses,
+                                   guessed_categories=guessed_categories,
                                    message=message)
     previous_guesses.append(current_guesses)
     session['previous_guesses'] = previous_guesses
@@ -99,6 +102,7 @@ def check_tiles():
     category = None
     count = 0
     message = None
+    flash = False
     for idx, word_list in enumerate(word_lists):
         cur_count = sum(1 for item in word_list if item in current_words)
         if cur_count > count:
@@ -108,6 +112,7 @@ def check_tiles():
             break
     if match != -1:
         category = {}
+        flash = True
         for key, value in db['categories'][match].items():
             if key != 'words':
                 category[key] = value
@@ -115,6 +120,8 @@ def check_tiles():
                 category[key] = ", ".join([x for x in db['categories'][match]['words']])
         guessed_categories.append(category)
         session['guessed_categories'] = guessed_categories
+        words = [x for x in session['player_words'] if x[0] not in current_guesses]
+        session['player_words'] = words
     else:
         mistakes_remaining -= 1
         session['mistakes_remaining'] = mistakes_remaining
@@ -123,7 +130,7 @@ def check_tiles():
         else:
             message = "One away..." if count == 3 else "Bah! Humbug!"
 
-    print(category)
+    print(flash)
 
     return render_template('word_tile_board.html',
                            words=session['player_words'],
@@ -131,6 +138,7 @@ def check_tiles():
                            current_guesses=current_guesses,
                            match=match,
                            guessed_categories=guessed_categories,
+                           flash=flash,
                            message=message)
 
 
