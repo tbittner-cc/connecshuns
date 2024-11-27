@@ -35,13 +35,13 @@ db['words'] = [('word' + str(idx), word)
 
 @app.route('/')
 def index():
-    if not session.get('mistakes_remaining'):
+    if session.get('mistakes_remaining') is None:
         session['mistakes_remaining'] = 4
-    if not session.get('player_words'):
+    if session.get('player_words') is None:
         player_words = [tuple(word.value) for word in db['words']]
         random.shuffle(player_words)
         session['player_words'] = player_words
-    if not session.get('guessed_categories'):
+    if session.get('guessed_categories') is None:
         session['guessed_categories'] = []
     return render_template('index.html',
                            words=session['player_words'],
