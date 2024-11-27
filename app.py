@@ -46,7 +46,7 @@ def index():
     return render_template('index.html',
                            words=session['player_words'],
                            mistakes_remaining=session['mistakes_remaining'],
-                           guessed_categories=session['guessed_categories'],
+                           categories=session['guessed_categories'],
                            current_guesses=[])
 
 
@@ -65,7 +65,7 @@ def shuffle():
     return render_template('word_tile_board.html',
                            words=session['player_words'],
                            mistakes_remaining=session['mistakes_remaining'],
-                           guessed_categories=session['guessed_categories'],
+                           categories=session['guessed_categories'],
                            current_guesses=[])
 
 
@@ -92,7 +92,7 @@ def check_tiles():
                                    words=session["player_words"],
                                    mistakes_remaining=mistakes_remaining,
                                    current_guesses=current_guesses,
-                                   guessed_categories=guessed_categories,
+                                   categories=guessed_categories,
                                    message=message)
     previous_guesses.append(current_guesses)
     session['previous_guesses'] = previous_guesses
@@ -147,12 +147,15 @@ def check_tiles():
         elif mistakes_remaining == 1:
             message = "Fra-jee-lay"
 
+    if mistakes_remaining == 0:
+        pass
+
     return render_template('word_tile_board.html',
                            words=words,
                            mistakes_remaining=mistakes_remaining,
                            current_guesses=current_guesses,
                            match=match,
-                           guessed_categories=guessed_categories,
+                           categories=guessed_categories,
                            flash=flash,
                            message=message)
 
