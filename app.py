@@ -76,9 +76,10 @@ def check_tiles():
     if previous_guesses is None:
         previous_guesses = []
     guessed_categories = session.get('guessed_categories')
-    print("Guessed categories",guessed_categories)
+    print("Guessed categories", guessed_categories)
     if guessed_categories is None:
         guessed_categories = []
+    words = session['player_words']
 
     current_guesses = [
         x[0] for x in list(request.form.items()) if x[1].strip() != ''
@@ -104,7 +105,10 @@ def check_tiles():
     message = None
     flash = False
     for idx, word_list in enumerate(word_lists):
-        cur_count = sum(1 for item in word_list if item in current_words)
+        sorted(word_list)
+        sorted(current_words)
+        cur_count = sum(1 for l_idx, item in enumerate(word_list)
+                        if current_words[l_idx] == word_list[l_idx])
         if cur_count > count:
             count = cur_count
         if all(item in word_list for item in current_words):
@@ -117,10 +121,13 @@ def check_tiles():
             if key != 'words':
                 category[key] = value
             else:
-                category[key] = ", ".join([x for x in db['categories'][match]['words']])
+                category[key] = ", ".join(
+                    [x for x in db['categories'][match]['words']])
         guessed_categories.append(category)
         session['guessed_categories'] = guessed_categories
-        words = [x for x in session['player_words'] if x[0] not in current_guesses]
+        words = [
+            x for x in session['player_words'] if x[0] not in current_guesses
+        ]
         session['player_words'] = words
     else:
         mistakes_remaining -= 1
@@ -130,10 +137,18 @@ def check_tiles():
         else:
             message = "One away..." if count == 3 else "Bah! Humbug!"
 
-    print(flash)
+    if len(words) == 0:
+        if mistakes_remaining == 4:
+            message = "Ho! Ho! Ho!"
+        elif mistakes_remaining == 3:
+            message = "You got your wings!"
+        elif mistakes_remaining == 2:
+            message = "Good job Cindy Lou Who!"
+        elif mistakes_remaining == 1:
+            message = "Fra-jee-lay"
 
     return render_template('word_tile_board.html',
-                           words=session['player_words'],
+                           words=words,
                            mistakes_remaining=mistakes_remaining,
                            current_guesses=current_guesses,
                            match=match,
