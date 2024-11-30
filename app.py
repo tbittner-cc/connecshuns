@@ -64,6 +64,10 @@ def index():
                            current_guesses=[])
 
 
+@app.route('/words', methods=['GET','POST'])
+def words():
+    return render_template('create_words.html')
+
 @app.route('/reset')
 def reset():
     session.clear()
