@@ -14,14 +14,6 @@
       add .opacity-0 to #message
       add .hidden to #message"
   {% endif %}
-  {% if flash == True %}
-  _="on load
-      add .transform .transition-transform .duration-300 .scale-100 to the last <div.category />
-      add .scale-110 to the last <div.category />
-      wait 300ms
-      remove .scale-110 from the last <div.category />
-  "
-  {% endif %}
   >
   {% if message %}
   <div id="message" class='absolute top-3 left-1/2 hidden transform 
@@ -30,7 +22,16 @@
     {{ message }}
   </div>
   {% endif %}
-  <div id='categories'>
+  <div id='categories'
+    {% if flash == True %}
+    _="on load
+        add .transform .transition-transform .duration-300 .scale-100 to the last <div.category />
+        add .scale-110 to the last <div.category />
+        wait 300ms
+        remove .scale-110 from the last <div.category />
+    "
+    {% endif %}
+    >
     {% for category in categories %}
     <div class='category my-4 h-20 rounded-lg flex flex-col items-center justify-center
       {% if category['level'] == 1 %}

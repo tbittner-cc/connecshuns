@@ -8,41 +8,55 @@ app = Flask(__name__)
 app.secret_key = os.environ.get('CONNECSHUNS_SECRET_KEY')
 
 db['categories'] = [{
-    'level': 1,
-    'category': 'Christmas Movies',
-    'words': ['Die Hard', 'Elf', 'Gremlins', 'Love Actually']
+    'level':
+    1,
+    'category':
+    'Christmas Movies',
+    'words': [('word1', 'Die Hard'), ('word2', 'Elf'), ('word3', 'Gremlins'),
+              ('word4', 'Love Actually')]
 }, {
-    'level': 2,
-    'category': 'Letters Starting with A',
-    'words': ['A', 'A', 'A', 'A']
+    'level':
+    2,
+    'category':
+    'Letters Starting with A',
+    'words': [('word5', 'A'), ('word6', 'A'), ('word7', 'A'), ('word8', 'A')]
 }, {
-    'level': 3,
-    'category': 'Words Used in Programming',
-    'words': ['Hello', 'Foo', 'World', 'Bar']
+    'level':
+    3,
+    'category':
+    'Words Used in Programming',
+    'words': [('word9', 'Hello'), ('word10', 'Foo'), ('word11', 'World'),
+              ('word12', 'Bar')]
 }, {
-    'level': 4,
-    'category': 'Non-Christmas Red Things',
-    'words': ['Pimple', 'Blood', 'Mars', 'Code']
+    'level':
+    4,
+    'category':
+    'Non-Christmas Red Things',
+    'words': [('word13', 'Pimple'), ('word14', 'Blood'), ('word15', 'Mars'),
+              ('word16', 'Code')]
 }]
-
-source_words = [
-    word for category in db['categories'] for word in category['words']
-]
-
-db['words'] = [('word' + str(idx), word)
-               for idx, word in enumerate(source_words)]
 
 
 @app.route('/')
 def index():
     if session.get('mistakes_remaining') is None:
         session['mistakes_remaining'] = 4
+
     if session.get('player_words') is None:
-        player_words = [tuple(word.value) for word in db['words']]
+        player_words = [(key, val) for category in db['categories']
+                        for (key, val) in category['words']]
         random.shuffle(player_words)
         session['player_words'] = player_words
+
     if session.get('guessed_categories') is None:
         session['guessed_categories'] = []
+
+    if session.get('previous_guesses') is None:
+        session['previous_guesses'] = []
+
+    if session.get('guessed_categories') is None:
+        session['guessed_categories'] = []
+
     return render_template('index.html',
                            words=session['player_words'],
                            mistakes_remaining=session['mistakes_remaining'],
@@ -73,12 +87,8 @@ def shuffle():
 def check_tiles():
     mistakes_remaining = session.get('mistakes_remaining')
     previous_guesses = session.get('previous_guesses')
-    if previous_guesses is None:
-        previous_guesses = []
     guessed_categories = session.get('guessed_categories')
     print("Guessed categories", guessed_categories)
-    if guessed_categories is None:
-        guessed_categories = []
     words = session['player_words']
 
     current_guesses = [
@@ -97,32 +107,23 @@ def check_tiles():
     previous_guesses.append(current_guesses)
     session['previous_guesses'] = previous_guesses
 
-    current_words = [x[1] for x in db['words'] if x[0] in current_guesses]
-    word_lists = [x['words'] for x in db['categories']]
+    word_lists = [[word[0] for word in x['words']] for x in db['categories']]
     match = -1
     category = None
     count = 0
     message = None
     flash = False
+
     for idx, word_list in enumerate(word_lists):
-        sorted(word_list)
-        sorted(current_words)
-        cur_count = sum(1 for l_idx, item in enumerate(word_list)
-                        if current_words[l_idx] == word_list[l_idx])
+        cur_count = sum(1 for item in word_list if item in current_guesses)
         if cur_count > count:
             count = cur_count
-        if all(item in word_list for item in current_words):
+        if all(item in word_list for item in current_guesses):
             match = idx
             break
     if match != -1:
-        category = {}
         flash = True
-        for key, value in db['categories'][match].items():
-            if key != 'words':
-                category[key] = value
-            else:
-                category[key] = ", ".join(
-                    [x for x in db['categories'][match]['words']])
+        category = _create_category_entry(match)
         guessed_categories.append(category)
         session['guessed_categories'] = guessed_categories
         words = [
@@ -138,17 +139,13 @@ def check_tiles():
             message = "One away..." if count == 3 else "Bah! Humbug!"
 
     if len(words) == 0:
-        if mistakes_remaining == 4:
-            message = "Ho! Ho! Ho!"
-        elif mistakes_remaining == 3:
-            message = "You got your wings!"
-        elif mistakes_remaining == 2:
-            message = "Good job Cindy Lou Who!"
-        elif mistakes_remaining == 1:
-            message = "Fra-jee-lay"
+        message = _get_final_message(mistakes_remaining)
 
     if mistakes_remaining == 0:
-        pass
+        words = []
+        session['player_words'] = words
+        guessed = [x['level'] for x in session['guessed_categories']]
+        print(guessed)
 
     return render_template('word_tile_board.html',
                            words=words,
@@ -158,6 +155,31 @@ def check_tiles():
                            categories=guessed_categories,
                            flash=flash,
                            message=message)
+
+
+def _create_category_entry(match):
+    category = {}
+    for key, value in db['categories'][match].items():
+        if key != 'words':
+            category[key] = value
+        else:
+            category[key] = ", ".join(
+                [x[1] for x in db['categories'][match]['words']])
+    return category
+
+
+def _get_final_message(mistakes_remaining):
+    if mistakes_remaining == 4:
+        message = "Ho! Ho! Ho!"
+    elif mistakes_remaining == 3:
+        message = "You got your wings!"
+    elif mistakes_remaining == 2:
+        message = "Good job Cindy Lou Who!"
+    elif mistakes_remaining == 1:
+        message = "Fra-jee-lay"
+    else:
+        message = None
+    return message
 
 
 if __name__ == '__main__':
