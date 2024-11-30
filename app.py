@@ -88,7 +88,6 @@ def check_tiles():
     mistakes_remaining = session.get('mistakes_remaining')
     previous_guesses = session.get('previous_guesses')
     guessed_categories = session.get('guessed_categories')
-    print("Guessed categories", guessed_categories)
     words = session['player_words']
 
     current_guesses = [
@@ -144,8 +143,17 @@ def check_tiles():
     if mistakes_remaining == 0:
         words = []
         session['player_words'] = words
-        guessed = [x['level'] for x in session['guessed_categories']]
-        print(guessed)
+        guessed_matches = [x['level'] for x in session['guessed_categories']]
+        unguessed_matches = [
+            # Levels are 1-indexed
+            x['level'] - 1 for x in db['categories']
+            if x['level'] not in guessed_matches
+        ]
+        print()
+        categories = [_create_category_entry(x) for x in unguessed_matches]
+        guessed_categories = session['guessed_categories']
+        guessed_categories.extend(categories)
+        session['guessed_categories'] = guessed_categories
 
     return render_template('word_tile_board.html',
                            words=words,
