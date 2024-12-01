@@ -7,7 +7,7 @@ from replit import db
 app = Flask(__name__)
 app.secret_key = os.environ.get('CONNECSHUNS_SECRET_KEY')
 
-db['categories'] = [{
+categories = [{
     'level':
     1,
     'category':
@@ -39,6 +39,9 @@ db['categories'] = [{
 
 @app.route('/')
 def index():
+    if _are_categories_empty():
+        db['categories'] = categories
+        
     if session.get('mistakes_remaining') is None:
         session['mistakes_remaining'] = 4
 
@@ -66,7 +69,34 @@ def index():
 
 @app.route('/words', methods=['GET','POST'])
 def words():
-    return render_template('create_words.html')
+    return render_template('create_words.html',categories=db['categories'])
+
+@app.route('/delete-all', methods=['POST'])
+def delete_all():
+    db['categories'] = _clear_categories()
+    return render_template('create_words.html',categories=db['categories'])
+
+def _clear_categories():
+    categories = []
+    for i in range(1,5):
+        category = {'level':i,'category':'', 'words':[('', ''),('', ''),('', ''),('','')]}
+        categories.append(category)
+    return categories
+
+def _are_categories_empty():
+    for i in range(4):
+        category = db['categories'][i]
+        if category['category'] != '':
+            return False
+        if category['words'][0][1] != '':
+            return False
+        if category['words'][1][1] != '':
+            return False
+        if category['words'][2][1] != '':
+            return False
+        if category['words'][3][1] != '':
+            return False
+    return True
 
 @app.route('/reset')
 def reset():

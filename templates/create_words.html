@@ -1,10 +1,14 @@
 {% extends 'base.html' %}
 {% block content %}
 <form class="flex items-center justify-center">
-  <div class="mt-2 mx-auto bg-white rounded-lg shadow-lg px-2 py-4 w-11/12
+  <div id="deleteModal" class="fixed top-2 left-1/2 transform -translate-x-1/2 z-10 w-3/4 
+    md:w-1/6 hidden">
+    {% include 'delete_all_modal.html' %}
+  </div>
+  <div class="my-2 mx-auto bg-white rounded-lg shadow-lg px-2 py-4 w-11/12
     md:w-1/4">
     <div class="font-bold text-center">
-      Create festive groups of four!
+      &#x1F385;&nbsp;Create festive groups of four!&nbsp;&#x1F385;
     </div>
     {% for idx in range(1,5) %}
     <div class='border-1 border-black p-4 my-4 mx-auto rounded-lg w-full
@@ -29,26 +33,39 @@
       <div class='font-bold text-lg'>Category: Extreme</div>
       {% endif %}
       <label for='category{{ idx }}' class='font-bold mt-2'>Category Name</label>
-      <input type='text' class="rounded-md" name='category{{ idx }}' id='category{{ idx }}'>
+      <input type='text' class="rounded-md px-2" name='category{{ idx }}' id='category{{ idx }}'
+        value='{{ categories[idx - 1]["category"] }}' />
       <div class='mt-2 ml-4 flex flex-col'>
       <label for='words{{ idx*1 }}' class='font-bold'>Word 1</label>
-      <input type='text' class="rounded-md" name='word{{ idx*1 }}' id='word{{ idx*1 }}'>
+      <input type='text' class="rounded-md px-2" name='word{{ idx*1 }}' id='word{{ idx*1 }}'
+        value='{{ categories[idx - 1]["words"][0][1] }}' />
       </div>
       <div class='mt-2 ml-4 flex flex-col'>
       <label for='words{{ idx*2 }}' class='font-bold'>Word 2</label>
-      <input type='text' class="rounded-md" name='word{{ idx*2 }}' id='word{{ idx*2 }}'>
+      <input type='text' class="rounded-md px-2" name='word{{ idx*2 }}' id='word{{ idx*2 }}'
+        value='{{ categories[idx - 1]["words"][1][1] }}' />
       </div>
       <div class='mt-2 ml-4 flex flex-col'>
       <label for='words{{ idx*3 }}' class='font-bold'>Word 3</label>
-      <input type='text' class="rounded-md" name='word{{ idx*3 }}' id='word{{ idx*3 }}'>
+      <input type='text' class="rounded-md px-2" name='word{{ idx*3 }}' id='word{{ idx*3 }}'
+        value='{{ categories[idx - 1]["words"][2][1] }}' />
       </div>
       <div class='mt-2 ml-4 flex flex-col'>
       <label for='words{{ idx*4 }}' class='font-bold'>Word 4</label>
-      <input type='text' class="rounded-md" name='word{{ idx*4 }}' id='word{{ idx*4 }}'>
+      <input type='text' class="rounded-md px-2" name='word{{ idx*4 }}' id='word{{ idx*4 }}'
+        value= '{{ categories[idx - 1]["words"][3][1] }}' />
       </div>
     </div>
     {% endfor %}
+    <div class="flex justify-between">
+      <button class='bg-red-600 text-white rounded-md p-2 h-10 w-28 text-center'
+        _='on click halt the event then remove .hidden from #deleteModal'>Delete All</button>
+      <div class='flex ml-auto'>
+        <button class='bg-black text-white rounded-md shadow-lg p-2 w-20 h-10 mr-2'>Submit</button>
+        <a class='bg-white text-black border-black border-2 rounded-md shadow-lg p-2 w-20 h-10 text-center'
+          href='/'>Cancel</a>
+      </div>
+    <div>
   </div>
-
 </form>
 {% endblock %}
