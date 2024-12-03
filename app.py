@@ -36,10 +36,32 @@ categories = [{
               ('word16', 'Code')]
 }]
 
+db['empty_categories'] = [{
+    'level': 1,
+    'category': '',
+    'words': [('', ''), ('', ''), ('', ''), ('', '')]
+}, {
+    'level': 2,
+    'category': '',
+    'words': [('', ''), ('', ''), ('', ''), ('', '')]
+}, {
+    'level': 3,
+    'category': '',
+    'words': [('', ''), ('', ''), ('', ''), ('', '')]
+}, {
+    'level': 4,
+    'category': '',
+    'words': [('', ''), ('', ''), ('', ''), ('', '')]
+}]
+
 
 @app.route('/')
 def index():
-    if _are_categories_empty():
+    # If you're wondering why I'm mixing and matching the 
+    # key/value store vs. the dict, it's due to the fact that
+    # the KV store uses non-standard Python data structures.
+    print('Categories:',db['categories'])
+    if db['categories'] == db['empty_categories']:
         db['categories'] = categories
         
     if session.get('mistakes_remaining') is None:
@@ -67,36 +89,41 @@ def index():
                            current_guesses=[])
 
 
-@app.route('/words', methods=['GET','POST'])
+@app.route('/words', methods=['GET'])
 def words():
     return render_template('create_words.html',categories=db['categories'])
 
 @app.route('/delete-all', methods=['POST'])
 def delete_all():
-    db['categories'] = _clear_categories()
+    db['categories'] = db['empty_categories']
     return render_template('create_words.html',categories=db['categories'])
 
-def _clear_categories():
-    categories = []
-    for i in range(1,5):
-        category = {'level':i,'category':'', 'words':[('', ''),('', ''),('', ''),('','')]}
-        categories.append(category)
-    return categories
+@app.route('/update-categories', methods=['POST'])
+def update_categories():
+    req_vals = list(request.form.items())
+    print(req_vals)
 
-def _are_categories_empty():
-    for i in range(4):
-        category = db['categories'][i]
-        if category['category'] != '':
-            return False
-        if category['words'][0][1] != '':
-            return False
-        if category['words'][1][1] != '':
-            return False
-        if category['words'][2][1] != '':
-            return False
-        if category['words'][3][1] != '':
-            return False
-    return True
+    for idx in range(1,5):
+        cat_key = f'category{str(idx)}'
+        cat_val = [val for (key, val) in req_vals if key == cat_key][0]
+        db['categories'][idx-1]['category'] = cat_val
+        
+        word_key_1 = f'word{str(idx*1)}'
+        word_val_1 = [val for (key, val) in req_vals if key == word_key_1][0]
+        db['categories'][idx-1]['words'][0] = (word_key_1, word_val_1)
+
+        word_key_2 = f'word{str(idx*2)}'
+        word_val_2 = [val for (key, val) in req_vals if key == word_key_2][0]
+        db['categories'][idx-1]['words'][0] = (word_key_2, word_val_2)
+
+        word_key_3 = f'word{str(idx*3)}'
+        word_val_3 = [val for (key, val) in req_vals if key == word_key_3][0]
+        db['categories'][idx-1]['words'][0] = (word_key_3, word_val_3)
+
+        word_key_4 = f'word{str(idx*4)}'
+        word_val_4 = [val for (key, val) in req_vals if key == word_key_4][0]
+        db['categories'][idx-1]['words'][0] = (word_key_4, word_val_4)
+    return render_template('create_words.html',categories=db['categories'])
 
 @app.route('/reset')
 def reset():
