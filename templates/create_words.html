@@ -36,23 +36,23 @@
       <input type='text' class="rounded-md px-2" name='category{{ idx }}' id='category{{ idx }}'
         value='{{ categories[idx - 1]["category"] }}' />
       <div class='mt-2 ml-4 flex flex-col'>
-      <label for='words{{ idx*1 }}' class='font-bold'>Word 1</label>
-      <input type='text' class="rounded-md px-2" name='word{{ idx*1 }}' id='word{{ idx*1 }}'
+      <label for='words{{ 1 + 4*(idx-1) }}' class='font-bold'>Word 1</label>
+      <input type='text' class="rounded-md px-2" name='word{{ 1 + 4*(idx-1) }}' id='word{{ 1 + 4*(idx-1) }}'
         value='{{ categories[idx - 1]["words"][0][1] }}' />
       </div>
       <div class='mt-2 ml-4 flex flex-col'>
-      <label for='words{{ idx*2 }}' class='font-bold'>Word 2</label>
-      <input type='text' class="rounded-md px-2" name='word{{ idx*2 }}' id='word{{ idx*2 }}'
+      <label for='words{{ 2 + 4*(idx-1) }}' class='font-bold'>Word 2</label>
+      <input type='text' class="rounded-md px-2" name='word{{ 2 + 4*(idx-1) }}' id='word{{ 2 + 4*(idx-1) }}'
         value='{{ categories[idx - 1]["words"][1][1] }}' />
       </div>
       <div class='mt-2 ml-4 flex flex-col'>
-      <label for='words{{ idx*3 }}' class='font-bold'>Word 3</label>
-      <input type='text' class="rounded-md px-2" name='word{{ idx*3 }}' id='word{{ idx*3 }}'
+      <label for='words{{ 3 + 4*(idx-1) }}' class='font-bold'>Word 3</label>
+      <input type='text' class="rounded-md px-2" name='word{{ 3 + 4*(idx-1) }}' id='word{{ 3 + 4*(idx-1) }}'
         value='{{ categories[idx - 1]["words"][2][1] }}' />
       </div>
       <div class='mt-2 ml-4 flex flex-col'>
-      <label for='words{{ idx*4 }}' class='font-bold'>Word 4</label>
-      <input type='text' class="rounded-md px-2" name='word{{ idx*4 }}' id='word{{ idx*4 }}'
+      <label for='words{{ 4 + 4*(idx-1) }}' class='font-bold'>Word 4</label>
+      <input type='text' class="rounded-md px-2" name='word{{ 4 + 4*(idx-1) }}' id='word{{ 4 + 4*(idx-1) }}'
         value= '{{ categories[idx - 1]["words"][3][1] }}' />
       </div>
     </div>

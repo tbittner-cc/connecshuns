@@ -108,21 +108,22 @@ def update_categories():
         cat_val = [val for (key, val) in req_vals if key == cat_key][0]
         db['categories'][idx-1]['category'] = cat_val
         
-        word_key_1 = f'word{str(idx*1)}'
+        word_key_1 = f'word{str(1 + 4*(idx-1))}'
         word_val_1 = [val for (key, val) in req_vals if key == word_key_1][0]
         db['categories'][idx-1]['words'][0] = (word_key_1, word_val_1)
 
-        word_key_2 = f'word{str(idx*2)}'
+        word_key_2 = f'word{str(2 + 4*(idx-1))}'
         word_val_2 = [val for (key, val) in req_vals if key == word_key_2][0]
-        db['categories'][idx-1]['words'][0] = (word_key_2, word_val_2)
+        db['categories'][idx-1]['words'][1] = (word_key_2, word_val_2)
 
-        word_key_3 = f'word{str(idx*3)}'
+        word_key_3 = f'word{str(3 + 4*(idx-1))}'
         word_val_3 = [val for (key, val) in req_vals if key == word_key_3][0]
-        db['categories'][idx-1]['words'][0] = (word_key_3, word_val_3)
+        db['categories'][idx-1]['words'][2] = (word_key_3, word_val_3)
 
-        word_key_4 = f'word{str(idx*4)}'
+        word_key_4 = f'word{str(4 + 4*(idx-1))}'
         word_val_4 = [val for (key, val) in req_vals if key == word_key_4][0]
-        db['categories'][idx-1]['words'][0] = (word_key_4, word_val_4)
+        db['categories'][idx-1]['words'][3] = (word_key_4, word_val_4)
+        print(db['categories'][idx-1])
     return render_template('create_words.html',categories=db['categories'])
 
 @app.route('/reset')
