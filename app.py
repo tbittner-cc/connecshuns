@@ -60,7 +60,6 @@ def index():
     # If you're wondering why I'm mixing and matching the 
     # key/value store vs. the dict, it's due to the fact that
     # the KV store uses non-standard Python data structures.
-    print('Categories:',db['categories'])
     if db['categories'] == db['empty_categories']:
         db['categories'] = categories
         
@@ -93,6 +92,10 @@ def index():
 def words():
     return render_template('create_words.html',categories=db['categories'])
 
+@app.route('/info', methods=['GET'])
+def info():
+    return render_template('information.html')
+
 @app.route('/delete-all', methods=['POST'])
 def delete_all():
     db['categories'] = db['empty_categories']
@@ -101,7 +104,6 @@ def delete_all():
 @app.route('/update-categories', methods=['POST'])
 def update_categories():
     req_vals = list(request.form.items())
-    print(req_vals)
 
     for idx in range(1,5):
         cat_key = f'category{str(idx)}'
@@ -123,7 +125,6 @@ def update_categories():
         word_key_4 = f'word{str(4 + 4*(idx-1))}'
         word_val_4 = [val for (key, val) in req_vals if key == word_key_4][0]
         db['categories'][idx-1]['words'][3] = (word_key_4, word_val_4)
-        print(db['categories'][idx-1])
     return render_template('create_words.html',categories=db['categories'])
 
 @app.route('/reset')
@@ -211,7 +212,6 @@ def check_tiles():
             x['level'] - 1 for x in db['categories']
             if x['level'] not in guessed_matches
         ]
-        print()
         categories = [_create_category_entry(x) for x in unguessed_matches]
         guessed_categories = session['guessed_categories']
         guessed_categories.extend(categories)

@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class='flex flex-col items-center justify-center'>
+  <div class="my-2 mx-auto bg-white rounded-lg shadow-lg px-2 py-4 w-11/12
+    md:w-1/4 flex flex-col items-center justify-center">
+    <div>
+      &#x1F385;&nbsp;&#x1F384;&#x1F385;&nbsp;&#x1F384;&#x1F385;&nbsp;&#x1F384;&#x1F385;&nbsp;&#x1F384;
+      &#x1F385;&nbsp;&#x1F384;&#x1F385;&nbsp;&#x1F384;&#x1F385;&nbsp;&#x1F384;
+    </div>
+    <div class="font-bold mt-2 text-center text-lg">
+      Instructions
+    </div>
+    <div class='mt-4 px-2'>
+    <a href="{{ url_for('words') }}" class='underline text-blue-500'>Words:</a>&nbsp; Click here to create
+      your word lists.  If you select 'Delete All' and go back to the home page without filling in any data, 
+      the default categories.  You <span class='font-bold'>must</span> have everyone click on
+      <a href='{{ url_for('reset') }}' class='underline text-blue-500'>reset</a> 
+      (or add /reset to the site address) after creating new categories to clear their stored data.
+      <br/>
+      Note that when you click 'Submit' on the page, it will appear that nothing happens.  You can confirm
+      your changes by clicking on <a href='{{ url_for('reset') }}' class='underline text-blue-500'>reset</a>.
+    </div>
+    <div class='mt-6 mb-4 px-2'>
+      <a href="{{ url_for('reset') }}" class='underline text-blue-500'>Reset:</a>&nbsp; Users should only 
+      click on this if you create new categories if the game misbehaves in unusual ways.  This resets all 
+      of their guessed categories to an empty list and gives them all of their chances back.
+    </div>
+    <div>
+      &#x1F385;&nbsp;&#x1F384;&#x1F385;&nbsp;&#x1F384;&#x1F385;&nbsp;&#x1F384;&#x1F385;&nbsp;&#x1F384;
+      &#x1F385;&nbsp;&#x1F384;&#x1F385;&nbsp;&#x1F384;&#x1F385;&nbsp;&#x1F384;
+    </div>
+  </div>
+</div>
+{% endblock %}
