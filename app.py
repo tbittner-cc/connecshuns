@@ -1,5 +1,6 @@
 import os
 import random
+import secrets
 
 from flask import Flask, redirect, render_template, request, session
 from replit import db
@@ -125,6 +126,11 @@ def update_categories():
         word_key_4 = f'word{str(4 + 4*(idx-1))}'
         word_val_4 = [val for (key, val) in req_vals if key == word_key_4][0]
         db['categories'][idx-1]['words'][3] = (word_key_4, word_val_4)
+
+        new_secret = secrets.token_hex(24)
+        os.environ['CONNECSHUNS_SECRET_KEY'] = new_secret
+        app.secret_key = os.environ.get('CONNECSHUNS_SECRET_KEY')
+        
     return render_template('create_words.html',categories=db['categories'])
 
 @app.route('/reset')
